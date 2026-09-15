@@ -1,0 +1,190 @@
+# AGRIWISE AI
+# Predict Before You Plant 🌾
+
+crops = {
+    "Tomato": {
+        "demand": 90,
+        "price": 85,
+        "cost": 45000,
+        "risk": 35
+    },
+    "Onion": {
+        "demand": 82,
+        "price": 75,
+        "cost": 40000,
+        "risk": 25
+    },
+    "Maize": {
+        "demand": 75,
+        "price": 65,
+        "cost": 30000,
+        "risk": 20
+    },
+    "Groundnut": {
+        "demand": 70,
+        "price": 72,
+        "cost": 35000,
+        "risk": 18
+    }
+}
+
+
+def calculate(crop, land, transport, budget):
+
+    data = crops[crop]
+
+    cultivation_cost = data["cost"] * land
+    total_cost = cultivation_cost + transport
+
+    revenue = data["price"] * 1000 * land
+    profit = revenue - total_cost
+
+    budget_score = 100 if total_cost <= budget else 40
+
+    score = (
+        data["demand"] * 0.40
+        + data["price"] * 0.30
+        + (100 - data["risk"]) * 0.20
+        + budget_score * 0.10
+    )
+
+    return {
+        "demand": data["demand"],
+        "price": data["price"],
+        "cost": total_cost,
+        "revenue": revenue,
+        "profit": profit,
+        "risk": data["risk"],
+        "score": round(score)
+    }
+
+
+print("=" * 55)
+print("             🌾 AGRIWISE AI 🌾")
+print("       Predict Before You Plant")
+print("=" * 55)
+
+location = input("\n📍 Enter your location: ")
+land = float(input("🌱 Enter land size (acres): "))
+budget = float(input("💰 Enter your budget (₹): "))
+transport = float(input("🚚 Enter transport cost (₹): "))
+
+print("\n🤖 ANALYZING MARKET CONDITIONS...")
+print("Please wait...\n")
+
+results = {}
+
+for crop in crops:
+    results[crop] = calculate(
+        crop,
+        land,
+        transport,
+        budget
+    )
+
+
+# Sort crops by AI score
+ranking = sorted(
+    results.items(),
+    key=lambda x: x[1]["score"],
+    reverse=True
+)
+
+
+print("=" * 55)
+print("              📊 CROP COMPARISON")
+print("=" * 55)
+
+for i, (crop, data) in enumerate(ranking, 1):
+
+    print(
+        f"\n{i}. 🌾 {crop}"
+        f"\n   Demand        : {data['demand']}%"
+        f"\n   Expected Price: ₹{data['price']}/kg"
+        f"\n   Total Cost    : ₹{data['cost']:,.0f}"
+        f"\n   Revenue       : ₹{data['revenue']:,.0f}"
+        f"\n   Profit        : ₹{data['profit']:,.0f}"
+        f"\n   Risk          : {data['risk']}%"
+        f"\n   AI Score      : {data['score']}/100"
+    )
+
+
+# Best crop
+best_crop, best = ranking[0]
+
+print("\n" + "=" * 55)
+print("              🏆 AI RECOMMENDATION")
+print("=" * 55)
+
+print(f"\n🌱 Recommended Crop : {best_crop}")
+print(f"📊 Opportunity Score: {best['score']}/100")
+print(f"📈 Demand           : {best['demand']}%")
+print(f"💰 Estimated Revenue: ₹{best['revenue']:,.0f}")
+print(f"💵 Estimated Profit  : ₹{best['profit']:,.0f}")
+print(f"⚠️ Market Risk       : {best['risk']}%")
+
+print("\n🧠 WHY THIS CROP?")
+print(
+    f"AI recommends {best_crop} because it has "
+    f"{best['demand']}% expected demand and a "
+    f"{best['score']}/100 opportunity score."
+)
+
+
+# WHAT-IF SIMULATION
+print("\n" + "=" * 55)
+print("          🔄 WHAT-IF MARKET SIMULATOR")
+print("=" * 55)
+
+new_transport = float(
+    input("\n🚚 Enter NEW transport cost (₹): ")
+)
+
+new_results = {}
+
+for crop in crops:
+    new_results[crop] = calculate(
+        crop,
+        land,
+        new_transport,
+        budget
+    )
+
+new_ranking = sorted(
+    new_results.items(),
+    key=lambda x: x[1]["score"],
+    reverse=True
+)
+
+new_crop, new_best = new_ranking[0]
+
+print("\n📊 AFTER MARKET CHANGE")
+print("-" * 55)
+
+print(f"Old Recommendation : {best_crop}")
+print(f"New Recommendation : {new_crop}")
+
+print(
+    f"\nOld Profit ({best_crop}) : "
+    f"₹{best['profit']:,.0f}"
+)
+
+print(
+    f"New Best Profit ({new_crop}) : "
+    f"₹{new_best['profit']:,.0f}"
+)
+
+if best_crop != new_crop:
+    print(
+        "\n🔄 AI ALERT:"
+        "\nMarket conditions changed."
+        f"\nAI switched recommendation from "
+        f"{best_crop} → {new_crop}."
+    )
+else:
+    print(
+        "\n✅ AI ALERT:"
+        "\nRecommendation remains stab
+
+
+
